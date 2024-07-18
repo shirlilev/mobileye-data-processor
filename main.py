@@ -16,7 +16,7 @@ class Watcher:
         self.observer.start()
         try:
             while True:                
-                time.sleep(5) # used to keep the main thread alive and give the observer time to monitor events        
+                self.observer.join(1) # used to keep the main thread alive and give the observer time to monitor events        
         except KeyboardInterrupt:
             self.observer.stop() # when user stop the thread
         except Exception as e:
