@@ -1,5 +1,4 @@
 # Update your database credentials and the folder to watch for new files
-
 DB_CONFIG = {
     'dbname': 'mobileye_db',
     'user': 'your_username',

@@ -23,6 +23,7 @@ def create_tables():
         """
         cur.execute(create_schema)
 
+        # objects_detection_events
         create_objects_detection_events_table = """
         CREATE TABLE IF NOT EXISTS mobileye_data.objects_detection_events (
             vehicle_id VARCHAR(255),
@@ -32,6 +33,8 @@ def create_tables():
             PRIMARY KEY (vehicle_id, detection_time, object_type)
         );
         """
+
+        # vehicle_status
         create_vehicle_status_table = """
         CREATE TABLE IF NOT EXISTS mobileye_data.vehicle_status (
             vehicle_id VARCHAR(255) PRIMARY KEY,

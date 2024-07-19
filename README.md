@@ -4,7 +4,6 @@ This system processes JSON files containing object detection events and vehicle 
 ## Prerequisites
 - Python 3.7+
 - PostgreSQL 12+
-- pip (Python package manager)
 
 ## Installation
 1. Clone this repository:
