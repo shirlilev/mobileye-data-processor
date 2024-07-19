@@ -15,7 +15,7 @@ python -m venv venv
 source venv/bin/activate
 3. Install the required packages:
 pip install -r requirements.txt
-4. Set up the PostgreSQL database: Create a new database named `mobileye_data`
+4. Set up the PostgreSQL database: Create a new database named `mobileye_db`
 5. Update the `config.py` file with your database credentials and the folder to watch for new files.
 
 ## Usage
@@ -33,9 +33,29 @@ python main.py
             (A cloud native data warehousing solution that offers excellent scalability, performance, and support for complex queries.)
 
 ## Performance Considerations
-- CPU usage: The script uses minimal CPU when idle and processes files efficiently.
-- Memory usage: Files are processed one at a time to minimize memory consumption.
-- Execution time: Bulk inserts are used to minimize database roundtrips and improve performance.
+## Options to Reduce CPU and Memory Usage
+## If data are Not Large-Scale:
+1. Load Files in Chunks with 'ijson':
+   - Reduces memory usage by not loading the entire file into memory.
+2. Concurrent Processing:
+   - Multi-threading: For I/O-bound tasks, utilizes the same CPU core.
+   - Multi-processing: For CPU-bound tasks, utilizes multiple CPU cores.
+3. Batch Insertions:
+   - Reduce overhead by inserting multiple rows into the database in one batch.
+   - Store data temporarily in Python Pandas DataFrames for efficient manipulation.
+4. Garbage Collection:
+   - Manually trigger garbage collection to free up memory with the `gc` library.
+## If data are Large-Scale:
+1. Distributed Processing with Spark:
+   - Process large-scale data across multiple nodes.
+2. Data Streaming:
+   - Use technologies like Apache Kafka for real-time data processing.
+3. Optimized Storage Formats:
+   - Use formats like Parquet for efficient storage and retrieval.
+4. Horizontal Scaling:
+   - Add more machines to distribute the load.
+5. Cloud-Based Solutions:
+   - Use cloud services like AWS S3 and AWS Lambda for scalable storage and processing.
 
 ## Assumptions
 - Files are valid JSON and follow the specified format.

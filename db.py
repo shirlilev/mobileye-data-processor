@@ -17,8 +17,14 @@ def create_tables():
     try:
         cur = conn.cursor()
 
+        # Create schema if it does not exist
+        create_schema = """
+        CREATE SCHEMA IF NOT EXISTS mobileye_data;
+        """
+        cur.execute(create_schema)
+
         create_objects_detection_events_table = """
-        CREATE TABLE IF NOT EXISTS objects_detection_events (
+        CREATE TABLE IF NOT EXISTS mobileye_data.objects_detection_events (
             vehicle_id VARCHAR(255),
             detection_time TIMESTAMP,
             object_type VARCHAR(50),
@@ -27,7 +33,7 @@ def create_tables():
         );
         """
         create_vehicle_status_table = """
-        CREATE TABLE IF NOT EXISTS vehicle_status (
+        CREATE TABLE IF NOT EXISTS mobileye_data.vehicle_status (
             vehicle_id VARCHAR(255) PRIMARY KEY,
             report_time TIMESTAMP,
             status VARCHAR(50)
@@ -38,9 +44,9 @@ def create_tables():
 
         # Create indexes for common queries
         create_indexes = """
-        CREATE INDEX IF NOT EXISTS idx_objects_detection_detection_time ON objects_detection_events(detection_time); 
-        CREATE INDEX IF NOT EXISTS idx_vehicles_status_report_time ON vehicle_status(report_time); 
-        CREATE INDEX IF NOT EXISTS idx_vehicles_status_status ON vehicle_status(status);
+        CREATE INDEX IF NOT EXISTS idx_objects_detection_detection_time ON mobileye_data.objects_detection_events(detection_time); 
+        CREATE INDEX IF NOT EXISTS idx_vehicles_status_report_time ON mobileye_data.vehicle_status(report_time); 
+        CREATE INDEX IF NOT EXISTS idx_vehicles_status_status ON mobileye_data.vehicle_status(status);
         """
         cur.execute(create_indexes)
 

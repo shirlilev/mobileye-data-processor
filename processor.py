@@ -2,19 +2,25 @@ import json
 import os
 from datetime import datetime
 from db import get_db_connection
+import re
+
+OBJECTS_DETECTION_REGEX = re.compile(r'^objects_detection_\d{8}_\d{6}\.json$')
+VEHICLES_STATUS_REGEX = re.compile(r'^vehicles_status_\d{8}_\d{6}\.json$')
 
 def process_file(file_path):
     try:
         file_name = os.path.basename(file_path)
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-            if file_name.startswith("objects_detection_"):
+        if OBJECTS_DETECTION_REGEX.match(file_name):
+            with open(file_path, 'r') as file:
+                data = json.load(file)
                 process_objects_detection(data['objects_detection_events'])
-            elif file_name.startswith("vehicles_status_"):
+        elif VEHICLES_STATUS_REGEX.match(file_name):
+            with open(file_path, 'r') as file:
+                data = json.load(file)
                 process_vehicle_status(data['vehicle_status'])
-            else:
-                print(f"Unknown file type: {file_name}")
-                return  # Don't delete unknown file types
+        else:
+            print(f"Invalid file name format: {file_name}")
+            return  # Skip processing for invalid file names
         os.remove(file_path)  # Remove the processed file
     except Exception as e:
         print(f"Error processing file {file_path}: {e}")
@@ -70,6 +76,7 @@ def process_vehicle_status(statuses):
             vehicle_id = status['vehicle_id']
             report_time = datetime.strptime(status['report_time'], '%Y-%m-%dT%H:%M:%S.%fZ')
             vehicle_status = status['status']
+            #  save the latest status of each vehicle 
             cur.execute("""
                 INSERT INTO vehicle_status (vehicle_id, report_time, status)
                 VALUES (%s, %s, %s)
